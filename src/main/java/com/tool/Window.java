@@ -12,29 +12,24 @@ import java.lang.Iterable;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tool.db.DBAccess;
-
 @Component
 public class Window {
     public JTextArea ta;
-    private ArrayList<NoteButton> notes;
+    ArrayList<NoteButton> notes;
     private JPanel notePanel;
     private JPanel noteButtons;
     public NoteButton lastNote;
-
     private NoteDB db;
-    private DBAccess dba;
 
     public JFrame frame;
 
     private IDGenerator idGen;
 
     @Autowired
-    Window(ArrayList<NoteButton> notes, NoteDB db, IDGenerator idGen, DBAccess dba) {
+    Window(ArrayList<NoteButton> notes, NoteDB db, IDGenerator idGen) {
         this.notes = notes;
         this.db = db;
         this.idGen = idGen;
-        this.dba = dba;
     }
 
     public void makeGUI() {
@@ -68,7 +63,7 @@ public class Window {
         //saving notes before the application closes
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
-                dba.saveNotes();
+                saveNotes();
             }
         });
 
@@ -96,13 +91,13 @@ public class Window {
     }
 
     private void loadNotes() {
-        Iterable<NoteData> noteDatas = dba.loadNotes();
+        Iterable<NoteData> noteDatas = db.findAll();
         noteDatas.forEach(noteData -> {
             System.out.println("loading note: " + noteData.getTitle());
             NoteButton button = new NoteButton(noteData.getID(), noteData.getTitle(), noteData.getContent());
+            //System.out.println(noteData.getTitle());
             notes.add(button);
             noteButtons.add(button);
-
             button.addActionListener((event) -> {
                 switchNotes(event);
             });
@@ -139,10 +134,6 @@ public class Window {
         NoteButton button = (NoteButton) a.getSource();
         lastNote = button;
         ta.setText(button.getContent());
-    }
-
-    public ArrayList<NoteButton> getNotes() {
-        return notes;
     }
 
     public void run() {

@@ -8,13 +8,13 @@ public class NoteButton extends JButton {
     private String content;
     IDGenerator idGen;
 
-    public NoteButton(String title, IDGenerator idGen) {
+    NoteButton(String title, IDGenerator idGen) {
         super(title);
         this.title = title;
         this.idGen = idGen;
         id = idGen.getID();
     }
-    public NoteButton(int id, String title, String content) {
+    NoteButton(int id, String title, String content) {
         super(title);
         this.id = id;
         this.title = title;
