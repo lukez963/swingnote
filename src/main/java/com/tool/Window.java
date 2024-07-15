@@ -77,10 +77,10 @@ public class Window {
             lastNote.setContent(ta.getText());
         }
         for (NoteButton note : notes) {
-            System.out.println("saving note: " + note.getTitle());
+            //System.out.println("saving note: " + note.getTitle());
             NoteData nd = db.findById(note.getId());
             if (nd == null) {
-                System.out.println("creating new entry for note: " + note.getTitle());
+                //System.out.println("creating new entry for note: " + note.getTitle());
                 db.save(new NoteData(note.getId(), note.getTitle(), note.getContent()));
             } else {
                 nd.setTitle(note.getTitle());
@@ -94,7 +94,7 @@ public class Window {
         Iterable<NoteData> noteDatas = db.findAll();
         int[] maxID = {0};
         noteDatas.forEach(noteData -> {
-            System.out.println("loading note: " + noteData.getTitle());
+            //System.out.println("loading note: " + noteData.getTitle());
             if (noteData.getId() > maxID[0]) {
                 maxID[0] = noteData.getId();
             }
