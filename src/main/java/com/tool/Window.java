@@ -81,7 +81,7 @@ public class Window {
             NoteData nd = db.findById(note.getID());
             if (nd == null) {
                 System.out.println("creating new entry for note: " + note.getTitle());
-                db.save(new NoteData(note.getTitle(), note.getContent()));
+                db.save(new NoteData(note.getID(), note.getTitle(), note.getContent()));
             } else {
                 nd.setTitle(note.getTitle());
                 nd.setContent(note.getContent());

@@ -15,4 +15,8 @@ public class IDGenerator {
         id++;
         return oldid;
     }
+
+    public void changeStartID(int newID) {
+        id = newID;
+    }
 }

@@ -8,14 +8,14 @@ import jakarta.persistence.Id;
 @Entity
 public class NoteData {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
     private String title;
     private String content;
 
     protected NoteData() {}
 
-    public NoteData(String title, String content) {
+    public NoteData(int id, String title, String content) {
+        this.id = id;
         this.title = title;
         this.content = content;
     }
