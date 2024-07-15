@@ -21,7 +21,7 @@ public class NoteButton extends JButton {
         this.content = content;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
     public String getTitle() {

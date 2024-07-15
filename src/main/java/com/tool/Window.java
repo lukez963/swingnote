@@ -78,10 +78,10 @@ public class Window {
         }
         for (NoteButton note : notes) {
             System.out.println("saving note: " + note.getTitle());
-            NoteData nd = db.findById(note.getID());
+            NoteData nd = db.findById(note.getId());
             if (nd == null) {
                 System.out.println("creating new entry for note: " + note.getTitle());
-                db.save(new NoteData(note.getID(), note.getTitle(), note.getContent()));
+                db.save(new NoteData(note.getId(), note.getTitle(), note.getContent()));
             } else {
                 nd.setTitle(note.getTitle());
                 nd.setContent(note.getContent());
@@ -92,9 +92,13 @@ public class Window {
 
     private void loadNotes() {
         Iterable<NoteData> noteDatas = db.findAll();
+        int[] maxID = {0};
         noteDatas.forEach(noteData -> {
             System.out.println("loading note: " + noteData.getTitle());
-            NoteButton button = new NoteButton(noteData.getID(), noteData.getTitle(), noteData.getContent());
+            if (noteData.getId() > maxID[0]) {
+                maxID[0] = noteData.getId();
+            }
+            NoteButton button = new NoteButton(noteData.getId(), noteData.getTitle(), noteData.getContent());
             //System.out.println(noteData.getTitle());
             notes.add(button);
             noteButtons.add(button);
@@ -108,6 +112,7 @@ public class Window {
         if (lastNote != null) {
             ta.setText(lastNote.getContent());
         }
+        idGen.changeStartID(maxID[0] + 1);
     }
 
     private void addNewNote(String name) {

@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class NoteData {
+public class NoteData extends AbstractEntity<Integer> {
     @Id
     private int id;
     private String title;
@@ -20,7 +20,7 @@ public class NoteData {
         this.content = content;
     }
 
-    public int getID() {
+    public Integer getId() {
         return id;
     }
     public String getTitle() {
