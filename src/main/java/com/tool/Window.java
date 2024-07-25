@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class Window {
-    public JTextArea ta;
-    ArrayList<NoteButton> notes;
-    private JPanel notePanel;
-    private JPanel noteButtons;
-    public NoteButton lastNote;
-    private NoteDB db;
+    public NoteArea ta;
+    ArrayList<NoteButton> notes; //backend way of keeping track of created notes
+    private JPanel notePanel; //panel containing noteButtons + createNotes button
+    private JPanel noteButtons; //panel containing all note buttons
+    public NoteButton lastNote; //pointer to last note clicked on
+    private NoteDB db; //abstraction for interacting with relational database
 
     public JFrame frame;
 
@@ -33,13 +33,8 @@ public class Window {
     }
 
     public void makeGUI() {
-        frame = new JFrame("SwingNotes");
+        frame = new JFrame("SwingNote");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //add text box on the right
-        ta = new JTextArea(40, 70);
-        JScrollPane textScroll = new JScrollPane(ta);
-        frame.add(textScroll);
 
         //add buttons for note-switching on the left
         notePanel = new JPanel();
@@ -110,6 +105,8 @@ public class Window {
             lastNote = notes.get(0);
         }
         if (lastNote != null) {
+            ta = new NoteArea(lastNote);
+            frame.add(ta, BorderLayout.CENTER);
             ta.setText(lastNote.getContent());
         }
         idGen.changeStartID(maxID[0] + 1);
@@ -124,9 +121,11 @@ public class Window {
         });
         if (notes.size() == 1) {
             lastNote = button;
+            ta = new NoteArea(lastNote);
+            frame.add(ta, BorderLayout.CENTER);
         }
-        notePanel.revalidate();
-        notePanel.repaint();
+        frame.revalidate();
+        frame.repaint();
     }
 
     private void addNewNote() {
@@ -138,7 +137,7 @@ public class Window {
         lastNote.setContent(ta.getText());
         NoteButton button = (NoteButton) a.getSource();
         lastNote = button;
-        ta.setText(button.getContent());
+        ta.switchNote(lastNote);
     }
 
     public void run() {
