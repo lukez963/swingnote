@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Color;
 
 import java.util.ArrayList;
 import java.lang.Iterable;
@@ -102,7 +103,7 @@ public class Window {
             });
         });
         if (notes.size() > 0) {
-            lastNote = notes.get(0);
+            setLast(notes.get(0));
         }
         if (lastNote != null) {
             ta = new NoteArea(lastNote);
@@ -120,7 +121,7 @@ public class Window {
             switchNotes(event);
         });
         if (notes.size() == 1) {
-            lastNote = button;
+            setLast(button);
             ta = new NoteArea(lastNote);
             frame.add(ta, BorderLayout.CENTER);
         }
@@ -136,8 +137,16 @@ public class Window {
     private void switchNotes(ActionEvent a) {
         lastNote.setContent(ta.getText());
         NoteButton button = (NoteButton) a.getSource();
-        lastNote = button;
+        setLast(button);
         ta.switchNote(lastNote);
+    }
+
+    private void setLast(NoteButton button) {
+        if (lastNote != null) {
+            lastNote.setBackground(Color.WHITE);
+        }
+        lastNote = button;
+        button.setBackground(Color.ORANGE);
     }
 
     public void run() {
