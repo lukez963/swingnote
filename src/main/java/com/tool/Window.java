@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import java.util.ArrayList;
 import java.lang.Iterable;
@@ -22,6 +23,9 @@ public class Window {
     public NoteButton lastNote; //pointer to last note clicked on
     private NoteDB db; //abstraction for interacting with relational database
 
+    private JPanel filler; //filler for blank space when needed in text area
+    private boolean hasNoNote; //true if NoteArea currently not being displayed, i.e. frame has filler in center
+
     public JFrame frame;
 
     private IDGenerator idGen;
@@ -36,6 +40,9 @@ public class Window {
     public void makeGUI() {
         frame = new JFrame("SwingNote");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        filler = new JPanel();
+        filler.setPreferredSize(new Dimension(720, 480));
 
         //add buttons for note-switching on the left
         notePanel = new JPanel();
@@ -109,6 +116,10 @@ public class Window {
             ta = new NoteArea(lastNote);
             frame.add(ta, BorderLayout.CENTER);
             ta.setText(lastNote.getContent());
+            hasNoNote = false;
+        } else {
+            hasNoNote = true;
+            frame.add(filler, BorderLayout.CENTER);
         }
         idGen.changeStartID(maxID[0] + 1);
     }
@@ -121,6 +132,10 @@ public class Window {
             switchNotes(event);
         });
         if (notes.size() == 1) {
+            if (hasNoNote) {
+                frame.remove(filler);
+                hasNoNote = false;
+            }
             setLast(button);
             ta = new NoteArea(lastNote);
             frame.add(ta, BorderLayout.CENTER);
@@ -135,7 +150,15 @@ public class Window {
     }
 
     private void switchNotes(ActionEvent a) {
-        lastNote.setContent(ta.getText());
+        if (!hasNoNote) {
+            lastNote.setContent(ta.getText());
+        } else {
+            hasNoNote = false;
+            frame.remove(filler);
+            frame.add(ta, BorderLayout.CENTER);
+            frame.revalidate();
+            frame.repaint();
+        }
         NoteButton button = (NoteButton) a.getSource();
         setLast(button);
         ta.switchNote(lastNote);
