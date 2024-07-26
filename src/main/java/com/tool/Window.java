@@ -131,13 +131,22 @@ public class Window {
         button.addActionListener((event) -> {
             switchNotes(event);
         });
-        if (notes.size() == 1) {
+        /*if (notes.size() == 1) {
             if (hasNoNote) {
                 frame.remove(filler);
                 hasNoNote = false;
             }
             setLast(button);
             ta = new NoteArea(lastNote);
+            frame.add(ta, BorderLayout.CENTER);
+        }*/
+        if (hasNoNote) {
+            frame.remove(filler);
+            hasNoNote = false;
+            setLast(button);
+            if (ta == null) {
+                ta = new NoteArea(lastNote);
+            }
             frame.add(ta, BorderLayout.CENTER);
         }
         frame.revalidate();
